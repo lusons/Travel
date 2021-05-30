@@ -17,9 +17,15 @@ const Carousel: React.FC = () => {
   return (
     <div>
       <AntdCarousel autoplay style={contentStyle}>
-        <img src={carousel1} alt="" />
-        <img src={carousel2} alt="" />
-        <img src={carousel3} alt="" />
+        <a href="https://www.baidu.com">
+          <img src={carousel1} alt="" />
+        </a>
+        <a href="https://www.baidu.com">
+          <img src={carousel2} alt="" />
+        </a>
+        <a href="https://www.baidu.com">
+          <img src={carousel3} alt="" />
+        </a>
       </AntdCarousel>
     </div>
   );

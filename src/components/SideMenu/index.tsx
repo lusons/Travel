@@ -4,7 +4,12 @@ import { sideMenuList } from "../../mock/mock";
 import { Menu } from "antd";
 import { GiftOutlined } from "@ant-design/icons";
 
-const SideMenu: React.FC = () => {
+/**
+ *侧边菜单栏
+ *
+ * @return {*}
+ */
+const SideMenu: React.FC = (props: any) => {
   return (
     <>
       <Menu mode="vertical" className={styles["side-menu"]}>
