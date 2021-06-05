@@ -5,6 +5,7 @@ import facebook from "../../assets/images/facebook-807588_640.png";
 import follow from "../../assets/images/follow-826033_640.png";
 import microsoft from "../../assets/images/microsoft-80658_640.png";
 import icon from "../../assets/images/icon-720944_640.png";
+import { useTranslation } from "react-i18next";
 
 const imgs = [
   { src: facebook, title: "facebook" },
@@ -14,17 +15,19 @@ const imgs = [
 ];
 
 const Paterners: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <>
       <Divider orientation="left">
         <Typography.Title level={3} type="secondary">
-          合作企业
+          {t("home_page.joint_venture")}
         </Typography.Title>
       </Divider>
       <Row>
         {imgs.map((item, index, array) => {
           return (
-            <Col span={6}>
+            <Col span={6} key={index}>
               <img
                 src={item.src}
                 alt=""

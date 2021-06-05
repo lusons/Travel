@@ -66,9 +66,9 @@
 }
 
 .main-menu {
-  position: sticky;
-  top: 0px;
-  z-index: 999;
+  /* position: sticky;
+  top: 0px; */
+  /* z-index: 10001 !important; */
   padding-left: 3% !important;
   padding-right: 3% !important;
   background-color: #1976d2 !important;

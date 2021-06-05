@@ -1,64 +1,30 @@
 import React from "react";
+import Home from "./pages/Home";
+import SignIn from "./pages/SignIn";
+import Rigister from "./pages/Rigister";
+import Search from "./pages/Search";
+import Detail from "./pages/Detail";
 import styles from "./App.module.css";
-import Header from "./components/Header";
-import Footer from "./components/Footer";
-import { Row, Col, Typography } from "antd";
-import SideMenu from "./components/SideMenu";
-import Carousel from "./components/Carousel";
-import Paterners from "./components/Paterners";
-import ProductCollection from "./components/ProductCollection";
-import { productList1, productList2, productList3 } from "./mock/mock";
-import sideimg1 from "./assets/images/sider_2019_02-04-2.png";
-import sideimg2 from "./assets/images/sider_2019_02-04.png";
-import sideimg3 from "./assets/images/sider_2019_12-09.png";
+import { BrowserRouter, Route, Redirect, Switch } from "react-router-dom";
 
 const App: React.FC = () => {
   return (
     <div className={styles.App}>
-      <Header />
-      <div className={styles["page-content"]}>
-        <Row style={{ marginTop: 20 }}>
-          <Col span={6}>
-            <div>
-              <SideMenu />
-            </div>
-          </Col>
-          <Col span={18}>
-            <Carousel />
-          </Col>
-        </Row>
-        <ProductCollection
-          sideImage={sideimg1}
-          products={productList1}
-          title={
-            <Typography.Title level={3} type="warning">
-              爆款推荐
-            </Typography.Title>
-          }
-        />
-
-        <ProductCollection
-          sideImage={sideimg2}
-          products={productList2}
-          title={
-            <Typography.Title level={3} type="danger">
-              新品上市
-            </Typography.Title>
-          }
-        />
-
-        <ProductCollection
-          sideImage={sideimg3}
-          products={productList3}
-          title={
-            <Typography.Title level={3} type="success">
-              国内游推荐
-            </Typography.Title>
-          }
-        />
-        <Paterners />
-      </div>
-      <Footer />
+      <BrowserRouter>
+        {/* Switch开启单一匹配,匹配到一个就不会继续往下匹配 */}
+        <Switch>
+          {/* exact开启路由匹配严格模式 */}
+          <Route exact path="/" component={Home} />
+          <Route exact path="/Home" component={Home} />
+          <Route exact path="/SignIn" component={SignIn} />
+          <Route exact path="/Rigister" component={Rigister} />
+          <Route path="/Detail/:touristRouteId" component={Detail} />
+          <Route path="/Search/:keywords?" component={Search} />
+          <Route render={() => <h1>404...</h1>} />
+          {/* 所有路由都没匹配到的话,路由重定向到主页 */}
+          <Redirect to="/Home" />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 };
