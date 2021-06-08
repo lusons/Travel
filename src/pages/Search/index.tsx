@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import styles from "./index.module.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
+import MainLayout from "../../layouts/MainLayout";
 import { FilterArea } from "../../components/filter";
 import { ProductList } from "../../components/productList";
 import { useParams, useLocation } from "react-router-dom";
-import { Spin } from "antd";
+import { Spin, Typography } from "antd";
 import { searchProduct } from "../../store/toolkit/searchSlice";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { RootState } from "../../store/store";
@@ -55,24 +54,30 @@ const Search: React.FC = () => {
   }
 
   return (
-    <>
-      <Header />
-      <div className={styles["page-content"]}>
-        {/* 分类过滤器 */}
-        <div className={styles["product-list-container"]}>
-          <FilterArea />
-        </div>
-        {/* 产品列表 */}
-        <div className={styles["product-list-container"]}>
-          <ProductList
-            data={data}
-            paging={pagination}
-            onPageChange={onPageChange}
-          />
-        </div>
+    <MainLayout>
+      {/* 分类过滤器 */}
+      <div className={styles["product-list-container"]}>
+        <FilterArea />
       </div>
-      <Footer />
-    </>
+      {data ? (
+        <>
+          {/* 产品列表 */}
+          <div className={styles["product-list-container"]}>
+            <ProductList
+              data={data}
+              paging={pagination}
+              onPageChange={onPageChange}
+            />
+          </div>
+        </>
+      ) : (
+        <h1>
+          <Typography.Title level={2} style={{ textAlign: "center" }}>
+            没有找到任何信息
+          </Typography.Title>
+        </h1>
+      )}
+    </MainLayout>
   );
 };
 

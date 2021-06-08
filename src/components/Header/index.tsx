@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./index.module.css";
 import logo from "../../logo.svg";
-import { Layout, Typography, Input, Menu, Button, Dropdown } from "antd";
+import { Typography, Input, Menu, Button, Dropdown, Space } from "antd";
 import { GlobalOutlined } from "@ant-design/icons";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { LanguageState } from "../../store/reducers/language";
 import { createChangeLanguageReducer } from "../../store/actions/language";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { RootState } from "../../store/store";
+import jwt_decode, { JwtPayload } from "jwt-decode";
+import { userSlice } from "../../store/toolkit/userSlice";
+
+interface jwtPayLoad extends JwtPayload {
+  username: string;
+}
 
 interface languageState extends LanguageState {}
 
@@ -15,14 +22,26 @@ const Header: React.FC<languageState | any> = () =>
   // {language, changeLanguage,}
   {
     const history = useHistory();
-
+    const [Username, setUsername] = useState("");
     const { t } = useTranslation();
     // 函数式组件的mapStateToProps
-    const { language } = useSelector((state: any) => {
-      return {
-        language: state.language,
-      };
-    }, shallowEqual);
+    const { language, token, shoppingCart } = useSelector(
+      (state: RootState) => {
+        return {
+          language: state.language,
+          token: state.user.token,
+          shoppingCart: state.shoppingCart.items,
+        };
+      },
+      shallowEqual
+    );
+
+    useEffect(() => {
+      if (token) {
+        const { username } = jwt_decode<jwtPayLoad>(token);
+        setUsername(() => username);
+      }
+    }, [token]);
 
     // 获取dispatch
     const dispatch = useDispatch();
@@ -30,7 +49,10 @@ const Header: React.FC<languageState | any> = () =>
       dispatch(createChangeLanguageReducer(num));
     };
 
-    // const [Language, setLanguage] = useState(language.language);
+    const signOut = () => {
+      dispatch(userSlice.actions.signOut());
+      history.replace("/");
+    };
 
     return (
       <>
@@ -62,26 +84,56 @@ const Header: React.FC<languageState | any> = () =>
               >
                 {language.language === "zh" ? "中文" : "English"}
               </Dropdown.Button>
-              <Button.Group className={styles["button-group"]}>
-                <Button>{t("header.register")}</Button>
-                <Button>{t("header.signin")}</Button>
-              </Button.Group>
+              {token ? (
+                <Button.Group className={styles["button-group"]}>
+                  <Space>
+                    <span>
+                      {t("header.welcome")}
+                      <Typography.Text strong>{Username}</Typography.Text>
+                    </span>
+                    <Button onClick={() => history.push("/ShoppingCart")}>
+                      {t("header.shoppingCart")}:{shoppingCart.length}
+                    </Button>
+                    <Button onClick={signOut}>{t("header.signOut")}</Button>
+                  </Space>
+                </Button.Group>
+              ) : (
+                <Button.Group className={styles["button-group"]}>
+                  <Space>
+                    <Button onClick={() => history.push("/Register")}>
+                      {t("header.register")}
+                    </Button>
+                    <Button onClick={() => history.push("/Login")}>
+                      {t("header.signin")}
+                    </Button>
+                  </Space>
+                </Button.Group>
+              )}
             </div>
           </div>
-          <Layout.Header className={styles["main-header"]}>
-            <img src={logo} alt="logo" className={styles["App-logo"]} />
-            <Typography.Title level={3} className={styles.title}>
-              {t("header.title")}
-            </Typography.Title>
+          <div className={styles["main-header"]}>
+            <div>
+              <img src={logo} alt="logo" className={styles["App-logo"]} />
+              <Typography.Title level={3} className={styles.title}>
+                {t("header.title")}
+              </Typography.Title>
+            </div>
             <Input.Search
               placeholder={"请输入旅游目的地、主题、或关键字"}
               className={styles["search-input"]}
               onSearch={(keywords) => history.push("/Search/" + keywords)}
             />
-          </Layout.Header>
+          </div>
         </div>
         <Menu mode={"horizontal"} className={styles["main-menu"]}>
-          <Menu.Item key={1}>{t("header.home_page")}</Menu.Item>
+          <Menu.Item
+            key={1}
+            onClick={() => {
+              history.push("/");
+            }}
+          >
+            {t("header.home_page")}
+          </Menu.Item>
           <Menu.Item key={2}>{t("header.weekend")}</Menu.Item>
           <Menu.Item key={3}>{t("header.group")}</Menu.Item>
           <Menu.Item key="4"> {t("header.backpack")} </Menu.Item>

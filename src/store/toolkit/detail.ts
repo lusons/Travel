@@ -42,6 +42,7 @@ export const detailSlice = createSlice({
 		}
 	},
 	// toolkit会自动映射，不需要自己dispatch，但是getDetail需要返回data
+	// 额外的reducer，每当dispatch，就会自动触发
 	extraReducers: {
 		// [getDetail.pending.type]: (state)=> {
 		// 	state.loading = true

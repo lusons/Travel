@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch, shallowEqual } from "react-redux";
 import { RouteComponentProps, useParams } from "react-router-dom";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import Comments from "../../components/Comments";
 import ProductIntro from "../../components/ProductIntro";
 import { commentMockData } from "./mock";
+import MainLayout from "../../layouts/MainLayout";
 import {
   Col,
   Row,
@@ -15,7 +14,11 @@ import {
   Typography,
   Anchor,
   Menu,
+  Button,
+  message,
 } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { addShoppingCart } from "../../store/toolkit/shoppingCart";
 import styles from "./index.module.css";
 import { getDetail } from "../../store/toolkit/detail";
 import { RootState } from "../../store/store";
@@ -32,13 +35,18 @@ const Detail: React.FC<RouteComponentProps<MatchParams>> = (props) => {
   // const [product, setProduct] = useState<any>(null);
 
   const dispatch = useDispatch();
-  const { loading, product } = useSelector((state: RootState) => {
-    return {
-      loading: state.detail.loading,
-      product: state.detail.data,
-      error: state.detail.error,
-    };
-  }, shallowEqual);
+  const { loading, product, token, shopiingCartLoading } = useSelector(
+    (state: RootState) => {
+      return {
+        loading: state.detail.loading,
+        product: state.detail.data,
+        error: state.detail.error,
+        token: state.user.token as string,
+        shopiingCartLoading: state.shoppingCart.loading,
+      };
+    },
+    shallowEqual
+  );
 
   useEffect(() => {
     (async () => {
@@ -71,10 +79,12 @@ const Detail: React.FC<RouteComponentProps<MatchParams>> = (props) => {
 
   return (
     <>
-      <Header />
-      <div className={styles["page-content"]}>
+      <MainLayout>
         {/* 产品简介 与 日期选择 */}
-        <div className={styles["product-intro-container"]}>
+        <div
+          className={styles["product-intro-container"]}
+          style={{ marginBottom: 20 }}
+        >
           <Row>
             <Col span={13}>
               <ProductIntro
@@ -89,6 +99,24 @@ const Detail: React.FC<RouteComponentProps<MatchParams>> = (props) => {
               />
             </Col>
             <Col span={11}>
+              <Button
+                style={{ marginTop: 50, marginBottom: 30, display: "block" }}
+                type="primary"
+                danger
+                loading={shopiingCartLoading}
+                onClick={() => {
+                  console.log(token);
+
+                  if (!token)
+                    return message.warning("您还没有登陆，请先登录！！！");
+                  dispatch(
+                    addShoppingCart({ token, touristRouteId: product.id })
+                  );
+                }}
+              >
+                <ShoppingCartOutlined />
+                加入购物车
+              </Button>
               <RangePicker open style={{ marginTop: 20 }} />
             </Col>
           </Row>
@@ -152,8 +180,7 @@ const Detail: React.FC<RouteComponentProps<MatchParams>> = (props) => {
             <Comments data={commentMockData} />
           </div>
         </div>
-      </div>
-      <Footer />
+      </MainLayout>
     </>
   );
 };

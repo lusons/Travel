@@ -1,7 +1,4 @@
 import React, { useEffect } from "react";
-import styles from "./index.module.css";
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import { Row, Col, Typography, Spin } from "antd";
 import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { createAsyncProductAction } from "../../store/actions/product";
@@ -9,11 +6,12 @@ import SideMenu from "../../components/SideMenu";
 import Carousel from "../../components/Carousel";
 import Paterners from "../../components/Paterners";
 import ProductCollection from "../../components/ProductCollection";
-// import { productList1, productList2, productList3 } from "../../mock/mock";
+// import { productList1, productList2, productList3 } from " ../../mock/mock";
 import sideimg1 from "../../assets/images/sider_2019_02-04-2.png";
 import sideimg2 from "../../assets/images/sider_2019_02-04.png";
 import sideimg3 from "../../assets/images/sider_2019_12-09.png";
 import { useTranslation, WithTranslation } from "react-i18next";
+import MainLayout from "../../layouts/MainLayout";
 
 // 引入store类型接口
 import { RootState } from "../../store/store";
@@ -51,8 +49,7 @@ const Home: React.FC<WithTranslation> = (props) => {
 
   return (
     <>
-      <Header />
-      <div className={styles["page-content"]}>
+      <MainLayout>
         <Row style={{ marginTop: 20 }}>
           <Col span={6}>
             <div>
@@ -96,8 +93,7 @@ const Home: React.FC<WithTranslation> = (props) => {
         />
 
         <Paterners />
-      </div>
-      <Footer />
+      </MainLayout>
     </>
   );
 };

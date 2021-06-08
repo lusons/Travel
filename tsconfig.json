@@ -27,6 +27,7 @@
     ]
   },
   "include": [
-    "src"
-, "mock/mock.ts"  ]
+    "src",
+    "mock/mock.ts"  
+  ]
 }
